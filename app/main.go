@@ -13,7 +13,7 @@ func main() {
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.GET("/healthchek", func(ctx echo.Context) error {
+	e.GET("/health", func(ctx echo.Context) error {
 		return ctx.JSON(http.StatusAccepted, "online")
 	})
 
