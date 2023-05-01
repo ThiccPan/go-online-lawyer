@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/thiccpan/go-online-lawyer/entities"
 	// "github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -27,5 +28,9 @@ func (config *ConfigDB) InitDB() *gorm.DB {
 		os.Exit(1)
 	}
 
+	db.AutoMigrate(
+		&entities.Pengacara{},
+	)
+	
 	return db
 }
