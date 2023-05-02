@@ -7,18 +7,38 @@ import (
 
 type Pengacara interface {
 	GetAll() ([]entities.Pengacara, error)
-	GetByID() (entities.Pengacara, error)
-	Create() error
-	Delete() error
-	Update() error
+	// GetByEmail(email string) (entities.Pengacara, error)
+	// Create(data entities.PengacaraDTO) error
+	// Delete(email string) error
+	// Update(email string) error
 }
 
 type pengacara struct {
-	PengacaraStorage storage.Pengacara
+	PengacaraStorer storage.PengacaraStorer
 }
 
-func New(pengacaraStorage storage.Pengacara) *pengacara {
+func New(pengacaraStorage storage.PengacaraStorer) *pengacara {
 	return &pengacara{
-		PengacaraStorage: pengacaraStorage,
+		PengacaraStorer: pengacaraStorage,
 	}
+}
+
+func (p *pengacara) GetAll() ([]entities.Pengacara, error) {
+	return p.PengacaraStorer.GetAll()
+}
+
+func GetByEmail(email string) (entities.Pengacara, error) {
+	panic("unimplemented")
+}
+
+func Create(data entities.PengacaraDTO) error {
+	panic("unimplemented")
+}
+
+func Delete(email string) error {
+	panic("unimplemented")
+}
+
+func Update(email string) error {
+	panic("unimplemented")
 }
