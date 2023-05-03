@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strconv"
+
 	"github.com/labstack/echo/v4"
 	"github.com/thiccpan/go-online-lawyer/usecases"
 )
@@ -26,6 +28,39 @@ func (p *pengacara) GetAll(c echo.Context) error {
 			"error": err.Error(),
 		})
 	}
+	return c.JSON(200, echo.Map{
+		"data": data,
+	})
+}
+
+func (p *pengacara) GetWithFilter(c echo.Context) error {
+	emailPayload := c.QueryParam("email")
+	data, err := p.useCase.GetByEmail(emailPayload)
+	if err != nil {
+		return c.JSON(500, echo.Map{
+			"error": err.Error(),
+		})
+	}
+	return c.JSON(200, echo.Map{
+		"data": data,
+	})
+}
+
+func (p *pengacara) GetById(c echo.Context) error {
+	idPayload, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(400, echo.Map{
+			"error": err.Error(),
+		})
+	}
+
+	data, err := p.useCase.GetById(idPayload)
+	if err != nil {
+		return c.JSON(500, echo.Map{
+			"error": err.Error(),
+		})
+	}
+
 	return c.JSON(200, echo.Map{
 		"data": data,
 	})
