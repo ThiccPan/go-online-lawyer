@@ -24,7 +24,24 @@ func (p *Pengacara) GetAll() ([]entities.Pengacara, error) {
 	return pengacaras, nil
 }
 
-func (p *Pengacara) GetByID() {}
+func (p *Pengacara) GetByEmail(email string) (entities.Pengacara, error) {
+	var pengacara entities.Pengacara
+	res := p.DB.Where("email = ?", email).First(&pengacara)
+	if res.Error != nil {
+		return pengacara, res.Error
+	}
+	return pengacara, nil
+}
+
+func (p *Pengacara) GetById(id int) (entities.Pengacara, error) {
+	var pengacara entities.Pengacara
+	res := p.DB.Where("id = ?", id).First(&pengacara)
+	if res.Error != nil {
+		return pengacara, res.Error
+	}
+	return pengacara, nil
+}
+
 func (p *Pengacara) Insert() {}
 func (p *Pengacara) Update() {}
 func (p *Pengacara) Delete() {}
