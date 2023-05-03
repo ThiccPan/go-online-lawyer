@@ -7,7 +7,8 @@ import (
 
 type Pengacara interface {
 	GetAll() ([]entities.Pengacara, error)
-	// GetByEmail(email string) (entities.Pengacara, error)
+	GetByEmail(email string) (entities.Pengacara, error)
+	GetById(id int) (entities.Pengacara, error)
 	// Create(data entities.PengacaraDTO) error
 	// Delete(email string) error
 	// Update(email string) error
@@ -27,8 +28,12 @@ func (p *pengacara) GetAll() ([]entities.Pengacara, error) {
 	return p.PengacaraStorer.GetAll()
 }
 
-func GetByEmail(email string) (entities.Pengacara, error) {
-	panic("unimplemented")
+func (p *pengacara) GetByEmail(email string) (entities.Pengacara, error) {
+	return p.PengacaraStorer.GetByEmail(email)
+}
+
+func (p *pengacara) GetById(id int) (entities.Pengacara, error) {
+	return p.PengacaraStorer.GetById(id)
 }
 
 func Create(data entities.PengacaraDTO) error {
