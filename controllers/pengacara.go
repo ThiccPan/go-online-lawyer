@@ -33,19 +33,6 @@ func (p *pengacara) GetAll(c echo.Context) error {
 	})
 }
 
-func (p *pengacara) GetWithFilter(c echo.Context) error {
-	emailPayload := c.QueryParam("email")
-	data, err := p.useCase.GetByEmail(emailPayload)
-	if err != nil {
-		return c.JSON(500, echo.Map{
-			"error": err.Error(),
-		})
-	}
-	return c.JSON(200, echo.Map{
-		"data": data,
-	})
-}
-
 func (p *pengacara) GetById(c echo.Context) error {
 	idPayload, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -61,6 +48,32 @@ func (p *pengacara) GetById(c echo.Context) error {
 		})
 	}
 
+	return c.JSON(200, echo.Map{
+		"data": data,
+	})
+}
+
+func (p *pengacara) GetWithFilter(c echo.Context) error {
+	emailPayload := c.QueryParam("email")
+	data, err := p.useCase.GetByEmail(emailPayload)
+	if err != nil {
+		return c.JSON(500, echo.Map{
+			"error": err.Error(),
+		})
+	}
+	return c.JSON(200, echo.Map{
+		"data": data,
+	})
+}
+
+func (p *pengacara) GetByCategory(c echo.Context) error {
+	categoryPayload := c.Param("category")
+	data, err := p.useCase.GetByCategory(categoryPayload)
+	if err != nil {
+		return c.JSON(500, echo.Map{
+			"error": err.Error(),
+		})
+	}
 	return c.JSON(200, echo.Map{
 		"data": data,
 	})

@@ -36,8 +36,9 @@ func main() {
 		return ctx.JSON(http.StatusAccepted, "online")
 	})
 	e.GET("/pengacaras", pengacaraController.GetAll)
-	e.GET("/pengacaras/filter", pengacaraController.GetWithFilter)
 	e.GET("/pengacaras/:id", pengacaraController.GetById)
+	e.GET("/pengacaras/filter", pengacaraController.GetWithFilter)
+	e.GET("/pengacaras/category/:category", pengacaraController.GetByCategory)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))
