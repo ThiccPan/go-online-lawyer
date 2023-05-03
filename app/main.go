@@ -31,10 +31,13 @@ func main() {
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	// Route
 	e.GET("/health", func(ctx echo.Context) error {
 		return ctx.JSON(http.StatusAccepted, "online")
 	})
 	e.GET("/pengacaras", pengacaraController.GetAll)
+	e.GET("/pengacaras/filter", pengacaraController.GetWithFilter)
+	e.GET("/pengacaras/:id", pengacaraController.GetById)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))
