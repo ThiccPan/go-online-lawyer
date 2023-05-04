@@ -24,21 +24,32 @@ func main() {
 
 	DB := DBconf.InitDB()
 
+	// storage, usecase, and controller setup
+	// pengacara
 	pengacaraStorage := storage.NewPengacaraStorer(DB)
-	pengacaraUseCase := usecases.New(pengacaraStorage)
-	pengacaraController := controllers.NewController(pengacaraUseCase)
+	pengacaraUseCase := usecases.NewPengacaraUsecase(pengacaraStorage)
+	pengacaraController := controllers.NewPengacaraController(pengacaraUseCase)
+	// user
+	userStorage := storage.NewUserStorer(DB)
+	userUseCase:= usecases.NewUserUsecase(userStorage)
+	userController := controllers.NewUserController(userUseCase)
 
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+
 	// Route
 	e.GET("/health", func(ctx echo.Context) error {
 		return ctx.JSON(http.StatusAccepted, "online")
 	})
+	// pengacara route
 	e.GET("/pengacaras", pengacaraController.GetAll)
 	e.GET("/pengacaras/:id", pengacaraController.GetById)
 	e.GET("/pengacaras/filter", pengacaraController.GetWithFilter)
 	e.GET("/pengacaras/category/:category", pengacaraController.GetByCategory)
+	// user route
+	e.POST("/register", userController.UserRegister) //TODO: validation
+	e.POST("/login", userController.UserLogin) //TODO: validation
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))
