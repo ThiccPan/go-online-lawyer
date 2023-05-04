@@ -10,6 +10,7 @@ type Pengacara struct {
 	Email string `json:"email"`
 	Password string `json:"password"`
 	Category string `json:"category"`
+	KonsultasiList []Konsultasi
 }
 
 type PengacaraDTO struct {
