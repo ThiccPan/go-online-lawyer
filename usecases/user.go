@@ -23,9 +23,10 @@ func NewUserUsecase(userStorage storage.UserStorer) *user {
 }
 
 func (u *user) Register(payload entities.UserDTO) (entities.User, error) {
-	validate := validator.New()
-	if err := validate.Struct(payload); err != nil {
-		err = exceptions.ErrValidationFailed
+
+	data, _ := u.UserStorer.GetByEmail(payload.Email)
+	if data.Email != "" {
+		err := exceptions.ErrUserAlreadyExist
 		return entities.User{}, err
 	}
 	
