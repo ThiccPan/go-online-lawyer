@@ -43,15 +43,15 @@ func (u *user) UserRegister(c echo.Context) error {
 }
 
 func (u *user) UserLogin(c echo.Context) error {
-	userDTO := entities.UserDTO{}
-	err := c.Bind(&userDTO)
+	userLoginDTO := entities.UserLoginDTO{}
+	err := c.Bind(&userLoginDTO)
 	if err != nil {
 		return c.JSON(400, echo.Map{
 			"error": err.Error(),
 		})
 	}
 
-	data, err := u.useCase.Login(userDTO)
+	data, err := u.useCase.Login(userLoginDTO)
 	if err != nil {	
 		return c.JSON(500, echo.Map{
 			"error": err.Error(),
