@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/thiccpan/go-online-lawyer/entities"
 	"github.com/thiccpan/go-online-lawyer/exceptions"
+	"github.com/thiccpan/go-online-lawyer/helper"
 	"github.com/thiccpan/go-online-lawyer/usecases"
 )
 
@@ -14,11 +15,13 @@ type User interface {
 
 type user struct {
 	useCase usecases.User
+	tokenManager helper.AuthJWT
 }
 
-func NewUserController(UserUseCase usecases.User) *user {
+func NewUserController(UserUseCase usecases.User, tokenManager helper.AuthJWT) *user {
 	return &user{
 		UserUseCase,
+		tokenManager,
 	}
 }
 
@@ -68,8 +71,16 @@ func (u *user) UserLogin(c echo.Context) error {
 			"error": err.Error(),
 		})
 	}
+
+	token, err := u.tokenManager.GenerateToken(data.Email)
+	if err != nil {	
+		return c.JSON(500, echo.Map{
+			"error": err.Error(),
+		})
+	}
 	
 	return c.JSON(200, echo.Map{
 		"data": data,
+		"token": token,
 	})
 }

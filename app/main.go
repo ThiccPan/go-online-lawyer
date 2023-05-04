@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	gormPsqlConf "github.com/thiccpan/go-online-lawyer/app/config"
 	"github.com/thiccpan/go-online-lawyer/controllers"
+	"github.com/thiccpan/go-online-lawyer/helper"
 	"github.com/thiccpan/go-online-lawyer/storage"
 	"github.com/thiccpan/go-online-lawyer/usecases"
 	"github.com/thiccpan/go-online-lawyer/validations"
@@ -23,8 +24,10 @@ func main() {
 		DB_Host:     "localhost",
 		DB_Name:     "go_online_lawyer",
 	}
-
+	
+	// services
 	DB := DBconf.InitDB()
+	tokenManager := helper.NewAuthJWT()
 
 	// storage, usecase, and controller setup
 	// pengacara
@@ -34,7 +37,7 @@ func main() {
 	// user
 	userStorage := storage.NewUserStorer(DB)
 	userUseCase:= usecases.NewUserUsecase(userStorage)
-	userController := controllers.NewUserController(userUseCase)
+	userController := controllers.NewUserController(userUseCase, tokenManager)
 
 	// Middleware
 	e.Use(middleware.Logger())
