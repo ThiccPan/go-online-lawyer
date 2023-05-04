@@ -15,7 +15,7 @@ type pengacara struct {
 	useCase usecases.Pengacara
 }
 
-func NewController(pengacaraUseCase usecases.Pengacara) *pengacara {
+func NewPengacaraController(pengacaraUseCase usecases.Pengacara) *pengacara {
 	return &pengacara{
 		pengacaraUseCase,
 	}

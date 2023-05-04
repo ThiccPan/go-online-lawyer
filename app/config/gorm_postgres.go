@@ -30,6 +30,7 @@ func (config *ConfigDB) InitDB() *gorm.DB {
 
 	db.AutoMigrate(
 		&entities.Pengacara{},
+		&entities.User{},
 	)
 	
 	return db

@@ -19,7 +19,7 @@ type pengacara struct {
 	PengacaraStorer storage.PengacaraStorer
 }
 
-func New(pengacaraStorage storage.PengacaraStorer) *pengacara {
+func NewPengacaraUsecase(pengacaraStorage storage.PengacaraStorer) *pengacara {
 	return &pengacara{
 		PengacaraStorer: pengacaraStorage,
 	}
