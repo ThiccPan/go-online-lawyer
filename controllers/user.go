@@ -35,7 +35,7 @@ func (u *user) UserRegister(c echo.Context) error {
 
 	if err := c.Validate(userDTO); err != nil {
 		return c.JSON(400, echo.Map{
-			"error": err.Error(),
+			"error": exceptions.ErrInvalidCredentials.Error(),
 		})
 	}
 
@@ -60,10 +60,16 @@ func (u *user) UserLogin(c echo.Context) error {
 	userLoginDTO := entities.UserLoginDTO{}
 	err := c.Bind(&userLoginDTO)
 	if err != nil {
-		return c.JSON(400, echo.Map{
+		return c.JSON(500, echo.Map{
 			"error": err.Error(),
 		})
 	}
+
+	if err := c.Validate(userLoginDTO); err != nil {
+		return c.JSON(400, echo.Map{
+			"error": exceptions.ErrInvalidCredentials.Error(),
+		})
+	}	
 
 	data, err := u.useCase.Login(userLoginDTO)
 	if err != nil {	

@@ -1,7 +1,6 @@
 package usecases
 
 import (
-	"github.com/go-playground/validator/v10"
 	"github.com/thiccpan/go-online-lawyer/entities"
 	"github.com/thiccpan/go-online-lawyer/exceptions"
 	"github.com/thiccpan/go-online-lawyer/storage"
@@ -39,11 +38,6 @@ func (u *user) Register(payload entities.UserDTO) (entities.User, error) {
 }
 
 func (u *user) Login(payload entities.UserLoginDTO) (entities.User, error) {
-	validate := validator.New()
-	if err := validate.Struct(payload); err != nil {
-		err = exceptions.ErrInvalidCredentials
-		return entities.User{}, err
-	}
 
 	data, err := u.UserStorer.GetByEmail(payload.Email)
 	if err != nil {
