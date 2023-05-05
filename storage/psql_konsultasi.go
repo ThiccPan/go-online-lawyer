@@ -1,8 +1,6 @@
 package storage
 
 import (
-	"time"
-
 	"github.com/thiccpan/go-online-lawyer/constants"
 	"github.com/thiccpan/go-online-lawyer/entities"
 	"gorm.io/gorm"
@@ -11,7 +9,7 @@ import (
 type KonsultasiStorer interface {
 	GetAllKonsultasi() ([]entities.Konsultasi, error)
 	GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error)
-	CreateKonsultasi(userId, pengacaraId uint, konsultasiTime time.Time) (entities.Konsultasi, error)
+	CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
 	EditKonsultasi() (entities.Konsultasi, error)
 }
 
@@ -25,12 +23,13 @@ func NewKonsultasiStorer(db *gorm.DB) *konsultasiStorer {
 	}
 }
 
-func (k *konsultasiStorer) CreateKonsultasi(userId, pengacaraId uint, konsultasiTime time.Time) (entities.Konsultasi, error) {
+func (k *konsultasiStorer) CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error) {
 	konsultasiRequest := entities.Konsultasi{
-		UserId: userId,
-		PengacaraId: pengacaraId,
+		UserId: konsultasiData.UserId,
+		PengacaraId: konsultasiData.PengacaraId,
 		Status: constants.DIPROSES,
-		KonsultasiTime: konsultasiTime,
+		KonsultasiTime: konsultasiData.KonsultasiTime,
+		Link: "",
 	}
 	res := k.DB.Create(&konsultasiRequest)
 	if res.Error != nil {

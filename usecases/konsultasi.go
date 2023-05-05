@@ -1,20 +1,22 @@
 package usecases
 
 import (
-	"time"
+	"fmt"
 
 	"github.com/thiccpan/go-online-lawyer/entities"
 	"github.com/thiccpan/go-online-lawyer/storage"
+	"github.com/thiccpan/go-online-lawyer/validations"
 )
 
 type Konsultasi interface {
 	GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error)
-	CreateKonsultasi(userId, pengacaraId uint, time time.Time) (entities.Konsultasi, error)
+	CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
 	EditKonsultasi(payload entities.KonsultasiDTO) (entities.Konsultasi, error)
 }
 
 type konsultasi struct {
 	KonsultasiStorer storage.KonsultasiStorer
+	validator validations.CustomValidator
 }
 
 func NewKonsultasiUsecase(konsultasiStorer storage.KonsultasiStorer) *konsultasi {
@@ -31,10 +33,14 @@ func (k *konsultasi) GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, 
 	return k.KonsultasiStorer.GetKonsultasiByUserId(userId)
 }
 
-func (k *konsultasi) CreateKonsultasi(userId, pengacaraId uint, time time.Time) (entities.Konsultasi, error) {
-	return k.KonsultasiStorer.CreateKonsultasi(userId, pengacaraId, time)
+func (k *konsultasi) CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error) {
+	return k.KonsultasiStorer.CreateKonsultasi(konsultasiData)
 }
 
-func (k *konsultasi) EditKonsultasi(userId, pengacaraId uint, time time.Time) (entities.Konsultasi, error) {
-	return k.KonsultasiStorer.CreateKonsultasi(userId, pengacaraId, time)
+func (k *konsultasi) EditKonsultasi(payload entities.KonsultasiDTO) (entities.Konsultasi, error) {
+	data := entities.Konsultasi{
+		Status: payload.Status,
+	}
+	fmt.Println(data)
+	return k.KonsultasiStorer.EditKonsultasi()
 }
