@@ -112,6 +112,15 @@ func (k *konsultasi) CreateKonsultasi(c echo.Context) error {
 }
 
 func (k *konsultasi) EditKonsultasi(c echo.Context) error {
+	payload := entities.KonsultasiDTO{}
+	c.Bind(&payload)
+	if err := c.Validate(payload); err != nil {
+		c.JSON(http.StatusBadRequest, echo.Map{
+			"error": err,
+		})
+	}
+	
+	k.useCase.EditKonsultasi(payload)
 	return nil
 }
 

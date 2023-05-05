@@ -10,6 +10,7 @@ import (
 type Konsultasi interface {
 	GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error)
 	CreateKonsultasi(userId, pengacaraId uint, time time.Time) (entities.Konsultasi, error)
+	EditKonsultasi(payload entities.KonsultasiDTO) (entities.Konsultasi, error)
 }
 
 type konsultasi struct {
@@ -31,5 +32,9 @@ func (k *konsultasi) GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, 
 }
 
 func (k *konsultasi) CreateKonsultasi(userId, pengacaraId uint, time time.Time) (entities.Konsultasi, error) {
+	return k.KonsultasiStorer.CreateKonsultasi(userId, pengacaraId, time)
+}
+
+func (k *konsultasi) EditKonsultasi(userId, pengacaraId uint, time time.Time) (entities.Konsultasi, error) {
 	return k.KonsultasiStorer.CreateKonsultasi(userId, pengacaraId, time)
 }
