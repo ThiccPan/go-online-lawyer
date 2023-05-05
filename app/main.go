@@ -63,6 +63,8 @@ func main() {
 	// konsultasi route
 	e.GET("/:id/konsultasi", konsultasiController.GetKonsultasiByUserId)
 	e.POST("/:id/konsultasi", konsultasiController.CreateKonsultasi)
+	e.PUT("/:id/konsultasi", konsultasiController.EditKonsultasi)
+	e.DELETE("/:id/konsultasi", konsultasiController.DeleteKonsultasi)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))
