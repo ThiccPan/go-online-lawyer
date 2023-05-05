@@ -12,6 +12,7 @@ type KonsultasiStorer interface {
 	GetAllKonsultasi() ([]entities.Konsultasi, error)
 	GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error)
 	CreateKonsultasi(userId, pengacaraId uint, konsultasiTime time.Time) (entities.Konsultasi, error)
+	EditKonsultasi() (entities.Konsultasi, error)
 }
 
 type konsultasiStorer struct {
@@ -54,4 +55,8 @@ func (k *konsultasiStorer) GetKonsultasiByUserId(userId uint) ([]entities.Konsul
 		return nil, res.Error
 	}
 	return daftarKonsultasi, nil
+}
+
+func (k *konsultasiStorer) EditKonsultasi() (entities.Konsultasi, error) {
+	return entities.Konsultasi{}, nil
 }
