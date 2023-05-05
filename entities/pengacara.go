@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
@@ -10,6 +11,7 @@ type Pengacara struct {
 	Email string `json:"email"`
 	Password string `json:"password"`
 	Category string `json:"category"`
+	Price decimal.Decimal `json:"price" gorm:"type:decimal(20,2);"`
 	KonsultasiList []Konsultasi
 }
 
@@ -18,4 +20,5 @@ type PengacaraDTO struct {
 	Email string `json:"email"`
 	Password string `json:"password"`
 	Category string `json:"category"`
+	Price decimal.Decimal `json:"price" gorm:"type:decimal(20,2);"`
 }
