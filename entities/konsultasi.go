@@ -13,7 +13,7 @@ type Konsultasi struct {
 	PengacaraId uint `json:"pengacaraId" validate:"required"`
 	Status constants.KonsultasiStatus `validate:"required" gorm:"konsultasiStatus"`
 	KonsultasiTime time.Time `json:"konsultasiTime" validate:"required"`
-	Link string `json:"link" validate:"required" gorm:"type:text"`
+	Link string `json:"link" gorm:"type:text"`
 }
 
 type KonsultasiDTO struct {
