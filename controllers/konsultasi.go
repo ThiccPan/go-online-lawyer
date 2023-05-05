@@ -110,3 +110,11 @@ func (k *konsultasi) CreateKonsultasi(c echo.Context) error {
 		"data": data,
 	})
 }
+
+func (k *konsultasi) EditKonsultasi(c echo.Context) error {
+	return nil
+}
+
+func (k *konsultasi) DeleteKonsultasi(c echo.Context) error {
+	return nil
+}
