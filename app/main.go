@@ -38,6 +38,10 @@ func main() {
 	userStorage := storage.NewUserStorer(DB)
 	userUseCase:= usecases.NewUserUsecase(userStorage)
 	userController := controllers.NewUserController(userUseCase, tokenManager)
+	// konsultasi
+	konsultasiStorage := storage.NewKonsultasiStorer(DB)
+	konsultasiUsecase := usecases.NewKonsultasiUsecase(konsultasiStorage)
+	konsultasiController := controllers.NewKonsultasiController(konsultasiUsecase)
 
 	// Middleware
 	e.Use(middleware.Logger())
@@ -54,8 +58,11 @@ func main() {
 	e.GET("/pengacaras/filter", pengacaraController.GetWithFilter)
 	e.GET("/pengacaras/category/:category", pengacaraController.GetByCategory)
 	// user route
-	e.POST("/register", userController.UserRegister) //TODO: validation
-	e.POST("/login", userController.UserLogin) //TODO: validation
+	e.POST("/register", userController.UserRegister)
+	e.POST("/login", userController.UserLogin)
+	// konsultasi route
+	e.GET("/:id/konsultasi", konsultasiController.GetKonsultasiByUserId)
+	e.POST("/:id/konsultasi", konsultasiController.CreateKonsultasi)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))
