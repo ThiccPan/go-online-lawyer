@@ -1,0 +1,57 @@
+package storage
+
+import (
+	"time"
+
+	"github.com/thiccpan/go-online-lawyer/constants"
+	"github.com/thiccpan/go-online-lawyer/entities"
+	"gorm.io/gorm"
+)
+
+type KonsultasiStorer interface {
+	GetAllKonsultasi() ([]entities.Konsultasi, error)
+	GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error)
+	CreateKonsultasi(userId, pengacaraId uint, konsultasiTime time.Time) (entities.Konsultasi, error)
+}
+
+type konsultasiStorer struct {
+	DB *gorm.DB
+}
+
+func NewKonsultasiStorer(db *gorm.DB) *konsultasiStorer {
+	return &konsultasiStorer{
+		DB: db,
+	}
+}
+
+func (k *konsultasiStorer) CreateKonsultasi(userId, pengacaraId uint, konsultasiTime time.Time) (entities.Konsultasi, error) {
+	konsultasiRequest := entities.Konsultasi{
+		UserId: userId,
+		PengacaraId: pengacaraId,
+		Status: constants.DIPROSES,
+		KonsultasiTime: konsultasiTime,
+	}
+	res := k.DB.Create(&konsultasiRequest)
+	if res.Error != nil {
+		return entities.Konsultasi{}, res.Error
+	}
+	return konsultasiRequest, nil
+}
+
+func (k *konsultasiStorer) GetAllKonsultasi() ([]entities.Konsultasi, error) {
+	var daftarKonsultasi []entities.Konsultasi
+	res := k.DB.Find(&daftarKonsultasi)
+	if res != nil {
+		return nil, res.Error
+	}
+	return daftarKonsultasi, nil
+}
+
+func (k *konsultasiStorer) GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error) {
+	var daftarKonsultasi []entities.Konsultasi
+	res := k.DB.Debug().Where("user_id = ?", userId).Find(&daftarKonsultasi)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return daftarKonsultasi, nil
+}
