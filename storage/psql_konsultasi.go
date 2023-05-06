@@ -4,6 +4,7 @@ import (
 	"github.com/thiccpan/go-online-lawyer/constants"
 	"github.com/thiccpan/go-online-lawyer/entities"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type KonsultasiStorer interface {
@@ -73,6 +74,6 @@ func (k *konsultasiStorer) EditKonsultasi(id uint, data entities.Konsultasi) (en
 
 func (k *konsultasiStorer) DeleteKonsultasi(id uint) (entities.Konsultasi, error) {
 	deletedData := entities.Konsultasi{}
-	err := k.DB.Clauses().Where("id = ", id).Delete(&deletedData).Error
+	err := k.DB.Clauses(clause.Returning{}).Where("id = ?", id).Delete(&deletedData).Error
 	return deletedData, err
 }
