@@ -63,7 +63,7 @@ func main() {
 	// konsultasi route
 	e.GET("/:id/konsultasi", konsultasiController.GetKonsultasiByUserId)
 	e.POST("/:id/konsultasi", konsultasiController.CreateKonsultasi)
-	e.PUT("/:id/konsultasi", konsultasiController.EditKonsultasi)
+	e.PUT("/:id/konsultasi/:konsultasiId", konsultasiController.EditKonsultasi)
 	e.DELETE("/:id/konsultasi", konsultasiController.DeleteKonsultasi)
 
 	// Start server
