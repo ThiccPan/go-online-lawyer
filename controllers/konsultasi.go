@@ -144,10 +144,41 @@ func (k *konsultasi) EditKonsultasi(c echo.Context) error {
 		})
 	}
 
-	k.useCase.EditKonsultasi(uint(payloadKonsultasiId), konsultasiData)
-	return nil
+	data, err := k.useCase.EditKonsultasi(uint(payloadKonsultasiId), konsultasiData)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"err": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+			"data": data,
+		})
 }
 
 func (k *konsultasi) DeleteKonsultasi(c echo.Context) error {
-	return nil
+	// userId, err := strconv.Atoi(c.Param("id"))
+	// if err != nil {
+	// 	return c.JSON(http.StatusBadRequest, echo.Map{
+	// 		"err": err.Error(),
+	// 	})
+	// }
+
+	konsultasiId, err := strconv.Atoi(c.Param("konsultasiId"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": err.Error(),
+		})
+	}
+
+	data, err := k.useCase.DeleteKonsultasi(uint(konsultasiId))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": err.Error(),
+		})
+	}
+	
+	return c.JSON(http.StatusOK, echo.Map{
+		"data": data,
+	})
 }
