@@ -10,7 +10,7 @@ type KonsultasiStorer interface {
 	GetAllKonsultasi() ([]entities.Konsultasi, error)
 	GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error)
 	CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
-	EditKonsultasi() (entities.Konsultasi, error)
+	EditKonsultasi(id uint, data entities.Konsultasi) (entities.Konsultasi, error)
 }
 
 type konsultasiStorer struct {
@@ -56,6 +56,16 @@ func (k *konsultasiStorer) GetKonsultasiByUserId(userId uint) ([]entities.Konsul
 	return daftarKonsultasi, nil
 }
 
-func (k *konsultasiStorer) EditKonsultasi() (entities.Konsultasi, error) {
-	return entities.Konsultasi{}, nil
+func (k *konsultasiStorer) EditKonsultasi(id uint, data entities.Konsultasi) (entities.Konsultasi, error) {
+	var res entities.Konsultasi
+	err := k.DB.Where("id = ?", id).First(&res).Error
+	if err != nil {
+		return entities.Konsultasi{}, err
+	}
+	res.KonsultasiTime = data.KonsultasiTime
+	err = k.DB.Save(&res).Error
+	if err != nil {
+		return entities.Konsultasi{}, err
+	}
+	return res, nil
 }
