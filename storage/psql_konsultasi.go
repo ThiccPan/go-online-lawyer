@@ -11,6 +11,7 @@ type KonsultasiStorer interface {
 	GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error)
 	CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
 	EditKonsultasi(id uint, data entities.Konsultasi) (entities.Konsultasi, error)
+	DeleteKonsultasi(id uint) (entities.Konsultasi, error)
 }
 
 type konsultasiStorer struct {
@@ -68,4 +69,10 @@ func (k *konsultasiStorer) EditKonsultasi(id uint, data entities.Konsultasi) (en
 		return entities.Konsultasi{}, err
 	}
 	return res, nil
+}
+
+func (k *konsultasiStorer) DeleteKonsultasi(id uint) (entities.Konsultasi, error) {
+	deletedData := entities.Konsultasi{}
+	err := k.DB.Clauses().Where("id = ", id).Delete(&deletedData).Error
+	return deletedData, err
 }
