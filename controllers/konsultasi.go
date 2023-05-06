@@ -111,7 +111,14 @@ func (k *konsultasi) CreateKonsultasi(c echo.Context) error {
 }
 
 func (k *konsultasi) EditKonsultasi(c echo.Context) error {
-	payload := entities.KonsultasiDTO{}
+	payloadKonsultasiId, err := strconv.Atoi(c.Param("konsultasiId"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"error": err,
+		})
+	}
+	
+	payload := entities.EditKonsultasiDTO{}
 	c.Bind(&payload)
 	if err := c.Validate(payload); err != nil {
 		c.JSON(http.StatusBadRequest, echo.Map{
@@ -119,7 +126,25 @@ func (k *konsultasi) EditKonsultasi(c echo.Context) error {
 		})
 	}
 
-	k.useCase.EditKonsultasi(payload)
+	timeFormatted, err := time.Parse(time.RFC3339, payload.KonsultasiTime)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"err": err.Error(),
+		})
+	}
+
+	konsultasiData := entities.Konsultasi{
+		KonsultasiTime: timeFormatted,
+	}
+
+	err = c.Validate(konsultasiData)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"err": err.Error(),
+		})
+	}
+
+	k.useCase.EditKonsultasi(uint(payloadKonsultasiId), konsultasiData)
 	return nil
 }
 
