@@ -12,6 +12,7 @@ type Konsultasi interface {
 	GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error)
 	CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
 	EditKonsultasi(konsultasiId uint, payload entities.Konsultasi) (entities.Konsultasi, error)
+	DeleteKonsultasi(konsultasiId uint) (entities.Konsultasi, error)
 }
 
 type konsultasi struct {
@@ -43,4 +44,9 @@ func (k *konsultasi) EditKonsultasi(konsultasiId uint, konsultasiData entities.K
 	}
 	fmt.Println(data)
 	return k.KonsultasiStorer.EditKonsultasi(konsultasiId, data)
+}
+
+func (k *konsultasi) DeleteKonsultasi(konsultasiId uint) (entities.Konsultasi, error) {
+	k.KonsultasiStorer.DeleteKonsultasi(konsultasiId)
+	return entities.Konsultasi{}, nil
 }
