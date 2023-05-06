@@ -3,6 +3,7 @@ package storage
 import (
 	"github.com/thiccpan/go-online-lawyer/constants"
 	"github.com/thiccpan/go-online-lawyer/entities"
+	"github.com/thiccpan/go-online-lawyer/exceptions"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -75,5 +76,8 @@ func (k *konsultasiStorer) EditKonsultasi(id uint, data entities.Konsultasi) (en
 func (k *konsultasiStorer) DeleteKonsultasi(id uint) (entities.Konsultasi, error) {
 	deletedData := entities.Konsultasi{}
 	err := k.DB.Clauses(clause.Returning{}).Where("id = ?", id).Delete(&deletedData).Error
+	if deletedData.ID == 0 {
+		err = exceptions.ErrKonsultasiNotFound
+	}
 	return deletedData, err
 }
