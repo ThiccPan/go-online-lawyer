@@ -47,6 +47,5 @@ func (k *konsultasi) EditKonsultasi(konsultasiId uint, konsultasiData entities.K
 }
 
 func (k *konsultasi) DeleteKonsultasi(konsultasiId uint) (entities.Konsultasi, error) {
-	k.KonsultasiStorer.DeleteKonsultasi(konsultasiId)
-	return entities.Konsultasi{}, nil
+	return k.KonsultasiStorer.DeleteKonsultasi(konsultasiId)
 }
