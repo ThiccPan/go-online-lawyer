@@ -2,11 +2,14 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/go-playground/validator/v10"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	gormPsqlConf "github.com/thiccpan/go-online-lawyer/app/config"
+	"github.com/thiccpan/go-online-lawyer/constants"
 	"github.com/thiccpan/go-online-lawyer/controllers"
 	"github.com/thiccpan/go-online-lawyer/helper"
 	"github.com/thiccpan/go-online-lawyer/storage"
@@ -17,17 +20,32 @@ import (
 func main() {
 	e := echo.New()
 
-	DBconf := gormPsqlConf.ConfigDB{
-		DB_Username: "thiccpan",
-		DB_Password: "dbpsqlpass432",
+	// DBconf := gormPsqlConf.ConfigDB{
+	// 	DB_Username: "thiccpan",
+	// 	DB_Password: "dbpsqlpass432",
+	// 	DB_Port:     "5432",
+	// 	DB_Host:     "localhost",
+	// 	DB_Name:     "go_online_lawyer",
+	// }
+
+	DBconfDefault := gormPsqlConf.ConfigDB{
+		DB_Username: os.Getenv("DB_USER"),
+		DB_Password: os.Getenv("DB_PASSWORD"),
 		DB_Port:     "5432",
-		DB_Host:     "localhost",
+		DB_Host:     "db",
 		DB_Name:     "go_online_lawyer",
 	}
-	
+
 	// services
-	DB := DBconf.InitDB()
+	DB := DBconfDefault.InitDB()
 	tokenManager := helper.NewAuthJWT()
+
+	// jwtConfig := echojwt.Config{
+	// 	NewClaimsFunc: func(c echo.Context) jwt.Claims {
+	// 		return new(helper.JwtCustomClaims)
+	// 	},
+	// 	SigningKey: constants.JWT_SECRET,
+	// }
 
 	// storage, usecase, and controller setup
 	// pengacara
@@ -36,7 +54,7 @@ func main() {
 	pengacaraController := controllers.NewPengacaraController(pengacaraUseCase)
 	// user
 	userStorage := storage.NewUserStorer(DB)
-	userUseCase:= usecases.NewUserUsecase(userStorage)
+	userUseCase := usecases.NewUserUsecase(userStorage)
 	userController := controllers.NewUserController(userUseCase, tokenManager)
 	// konsultasi
 	konsultasiStorage := storage.NewKonsultasiStorer(DB)
@@ -52,6 +70,9 @@ func main() {
 	e.GET("/health", func(ctx echo.Context) error {
 		return ctx.JSON(http.StatusAccepted, "online")
 	})
+
+	userJWT := e.Group("/user")
+	userJWT.Use(echojwt.JWT([]byte(constants.JWT_SECRET)))
 	// pengacara route
 	e.GET("/pengacaras", pengacaraController.GetAll)
 	e.GET("/pengacaras/:id", pengacaraController.GetById)
@@ -61,10 +82,10 @@ func main() {
 	e.POST("/register", userController.UserRegister)
 	e.POST("/login", userController.UserLogin)
 	// konsultasi route
-	e.GET("/:id/konsultasi", konsultasiController.GetKonsultasiByUserId)
-	e.POST("/:id/konsultasi", konsultasiController.CreateKonsultasi)
-	e.PUT("/:id/konsultasi/:konsultasiId", konsultasiController.EditKonsultasi)
-	e.DELETE("/:id/konsultasi/:konsultasiId", konsultasiController.DeleteKonsultasi)
+	userJWT.GET("/:id/konsultasi", konsultasiController.GetKonsultasiByUserId)
+	userJWT.POST("/:id/konsultasi", konsultasiController.CreateKonsultasi)
+	userJWT.PUT("/:id/konsultasi/:konsultasiId", konsultasiController.EditKonsultasi)
+	userJWT.DELETE("/:id/konsultasi/:konsultasiId", konsultasiController.DeleteKonsultasi)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))

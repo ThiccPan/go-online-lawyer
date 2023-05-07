@@ -8,6 +8,7 @@ import (
 type UserStorer interface {
 	Add(data entities.User) (entities.User, error)
 	GetByEmail(email string) (entities.User, error)
+	GetAllKonsultasi(user *entities.User) ([]entities.Konsultasi, error)
 }
 
 type User struct {
@@ -38,4 +39,13 @@ func (u *User) GetAll() ([]entities.User, error) {
 		return nil, res.Error
 	}
 	return users, nil
+}
+
+func (u * User) GetAllKonsultasi(user *entities.User) ([]entities.Konsultasi, error) {
+	var konsultasi []entities.Konsultasi
+	res := u.DB.Model(user).Association("KonsultasiList").Find(&konsultasi)
+	if res != nil {
+		return nil, res
+	}
+	return konsultasi, nil
 }
