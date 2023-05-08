@@ -9,7 +9,7 @@ import (
 )
 
 type Konsultasi interface {
-	GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error)//TODO: rename
+	GetAllUserKonsultasi(userId uint) ([]entities.Konsultasi, error)
 	GetUserKonsultasi(userId uint, konsultasiId uint) (entities.Konsultasi, error)
 	CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
 	EditKonsultasi(konsultasiId uint, userId uint, konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
@@ -31,8 +31,8 @@ func (k *konsultasi) GetAllKonsultasi() ([]entities.Konsultasi, error) {
 	return k.KonsultasiStorer.GetAllKonsultasi()
 }
 
-func (k *konsultasi) GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error) { //TODO: rename
-	return k.KonsultasiStorer.GetKonsultasiByUserId(userId)
+func (k *konsultasi) GetAllUserKonsultasi(userId uint) ([]entities.Konsultasi, error) { //TODO: rename
+	return k.KonsultasiStorer.GetAllUserKonsultasi(userId)
 }
 
 func (k *konsultasi) GetUserKonsultasi(userId uint, konsultasiId uint) (entities.Konsultasi, error) {

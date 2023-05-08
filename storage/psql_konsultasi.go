@@ -10,7 +10,7 @@ import (
 
 type KonsultasiStorer interface {
 	GetAllKonsultasi() ([]entities.Konsultasi, error)
-	GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error)
+	GetAllUserKonsultasi(userId uint) ([]entities.Konsultasi, error)
 	GetUserKonsultasi(userId uint, konsultasiId uint) (entities.Konsultasi, error)
 	CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
 	EditKonsultasi(konsultasiId uint, userId uint, data entities.Konsultasi) (entities.Konsultasi, error)
@@ -51,7 +51,7 @@ func (k *konsultasiStorer) GetAllKonsultasi() ([]entities.Konsultasi, error) {
 	return daftarKonsultasi, nil
 }
 
-func (k *konsultasiStorer) GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error) {
+func (k *konsultasiStorer) GetAllUserKonsultasi(userId uint) ([]entities.Konsultasi, error) {
 	var daftarKonsultasi []entities.Konsultasi
 	res := k.DB.Debug().Where("user_id = ?", userId).Find(&daftarKonsultasi)
 	if res.Error != nil {

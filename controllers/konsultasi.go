@@ -25,19 +25,7 @@ func NewKonsultasiController(konsultasiUseCase usecases.Konsultasi) *konsultasi 
 	}
 }
 
-func (k *konsultasi) TestGetKonsultasiByUserId(c echo.Context) error {
-	data, err := k.useCase.GetKonsultasiByUserId(1)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{
-			"err": err,
-		})
-	}
-	return c.JSON(http.StatusOK, echo.Map{
-		"data": data,
-	})
-}
-
-func (k *konsultasi) GetAllKonsultasiByUserId(c echo.Context) error {
+func (k *konsultasi) GetAllUserKonsultasi(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	idPayload, ok := claims["id"].(float64) //if error again try convert to string first
@@ -47,7 +35,7 @@ func (k *konsultasi) GetAllKonsultasiByUserId(c echo.Context) error {
 		})
 	}
 
-	data, err := k.useCase.GetKonsultasiByUserId(uint(idPayload))
+	data, err := k.useCase.GetAllUserKonsultasi(uint(idPayload))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{
 			"err": err,
@@ -88,7 +76,7 @@ func (k *konsultasi) GetUserKonsultasi(c echo.Context) error {
 	})
 }
 
-func (k *konsultasi) CreateKonsultasi(c echo.Context) error {
+func (k *konsultasi) CreateUserKonsultasi(c echo.Context) error {
 	payload := entities.KonsultasiDTO{}
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
@@ -140,7 +128,7 @@ func (k *konsultasi) CreateKonsultasi(c echo.Context) error {
 	})
 }
 
-func (k *konsultasi) EditKonsultasi(c echo.Context) error {
+func (k *konsultasi) EditUserKonsultasi(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	idPayload, ok := claims["id"].(float64) //if error again try convert to string first
@@ -195,7 +183,7 @@ func (k *konsultasi) EditKonsultasi(c echo.Context) error {
 		})
 }
 
-func (k *konsultasi) DeleteKonsultasi(c echo.Context) error {
+func (k *konsultasi) DeleteUserKonsultasi(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	idPayload, ok := claims["id"].(float64) //if error again try convert to string first
@@ -219,6 +207,18 @@ func (k *konsultasi) DeleteKonsultasi(c echo.Context) error {
 		})
 	}
 	
+	return c.JSON(http.StatusOK, echo.Map{
+		"data": data,
+	})
+}
+
+func (k *konsultasi) TestGetKonsultasiByUserId(c echo.Context) error {
+	data, err := k.useCase.GetAllUserKonsultasi(1)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": err,
+		})
+	}
 	return c.JSON(http.StatusOK, echo.Map{
 		"data": data,
 	})

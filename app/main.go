@@ -82,11 +82,11 @@ func main() {
 	e.POST("/register", userController.UserRegister)
 	e.POST("/login", userController.UserLogin)
 	// konsultasi route
-	userJWT.GET("/konsultasi", konsultasiController.GetAllKonsultasiByUserId)
-	userJWT.POST("/konsultasi", konsultasiController.CreateKonsultasi)
+	userJWT.GET("/konsultasi", konsultasiController.GetAllUserKonsultasi)
+	userJWT.POST("/konsultasi", konsultasiController.CreateUserKonsultasi)
 	userJWT.GET("/konsultasi/:konsultasiId", konsultasiController.GetUserKonsultasi)
-	userJWT.PUT("/konsultasi/:konsultasiId", konsultasiController.EditKonsultasi)
-	userJWT.DELETE("/konsultasi/:konsultasiId", konsultasiController.DeleteKonsultasi)
+	userJWT.PUT("/konsultasi/:konsultasiId", konsultasiController.EditUserKonsultasi)
+	userJWT.DELETE("/konsultasi/:konsultasiId", konsultasiController.DeleteUserKonsultasi)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))
