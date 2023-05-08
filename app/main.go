@@ -20,7 +20,7 @@ import (
 func main() {
 	e := echo.New()
 
-	// DBconf := gormPsqlConf.ConfigDB{
+	// DBconfDefault := gormPsqlConf.ConfigDB{
 	// 	DB_Username: "thiccpan",
 	// 	DB_Password: "dbpsqlpass432",
 	// 	DB_Port:     "5432",
@@ -82,8 +82,8 @@ func main() {
 	e.POST("/register", userController.UserRegister)
 	e.POST("/login", userController.UserLogin)
 	// konsultasi route
-	userJWT.GET("/:id/konsultasi", konsultasiController.GetKonsultasiByUserId)
-	userJWT.POST("/:id/konsultasi", konsultasiController.CreateKonsultasi)
+	userJWT.GET("/konsultasi", konsultasiController.GetKonsultasiByUserId)
+	userJWT.POST("/konsultasi", konsultasiController.CreateKonsultasi)
 	userJWT.PUT("/:id/konsultasi/:konsultasiId", konsultasiController.EditKonsultasi)
 	userJWT.DELETE("/:id/konsultasi/:konsultasiId", konsultasiController.DeleteKonsultasi)
 

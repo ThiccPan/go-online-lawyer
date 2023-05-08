@@ -1,14 +1,15 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/thiccpan/go-online-lawyer/constants"
 	"github.com/thiccpan/go-online-lawyer/entities"
+	"github.com/thiccpan/go-online-lawyer/exceptions"
 	"github.com/thiccpan/go-online-lawyer/usecases"
 )
 
@@ -41,11 +42,12 @@ func (k *konsultasi) TestGetKonsultasiByUserId(c echo.Context) error {
 }
 
 func (k *konsultasi) GetKonsultasiByUserId(c echo.Context) error {
-	idPayload, err := strconv.Atoi(c.Param("id"))
-	fmt.Println(idPayload)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{
-			"err": err,
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	idPayload, ok := claims["id"].(float64) //if error again try convert to string first
+	if !ok {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": exceptions.ErrInvalidCredentials,
 		})
 	}
 
@@ -63,15 +65,17 @@ func (k *konsultasi) GetKonsultasiByUserId(c echo.Context) error {
 
 func (k *konsultasi) CreateKonsultasi(c echo.Context) error {
 	payload := entities.KonsultasiDTO{}
-	payloadUserId, err := strconv.Atoi(c.Param("id"))
-	payload.UserId = uint(payloadUserId)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{
-			"err": err,
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	idPayload, ok := claims["id"].(float64) //if error again try convert to string first
+	if !ok {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": exceptions.ErrInvalidCredentials,
 		})
 	}
+	payload.UserId = uint(idPayload)
 
-	err = c.Bind(&payload)
+	err := c.Bind(&payload)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{
 			"err": err.Error(),
@@ -91,6 +95,7 @@ func (k *konsultasi) CreateKonsultasi(c echo.Context) error {
 		Status: constants.DIPROSES,
 		KonsultasiTime: timeFormatted,
 	}
+	
 	err = c.Validate(konsultasiData)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{
