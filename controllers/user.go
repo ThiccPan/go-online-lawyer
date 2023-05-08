@@ -78,7 +78,7 @@ func (u *user) UserLogin(c echo.Context) error {
 		})
 	}
 
-	token, err := u.tokenManager.GenerateToken(data.Email)
+	token, err := u.tokenManager.GenerateToken(data.ID, data.Email)
 	if err != nil {	
 		return c.JSON(500, echo.Map{
 			"error": err.Error(),
