@@ -5,6 +5,13 @@ import (
 	"gorm.io/gorm"
 )
 
+type PengacaraStorer interface {
+	GetAll() ([]entities.Pengacara, error)
+	GetById(id int) (entities.Pengacara, error)
+	GetByEmail(email string) (entities.Pengacara, error)
+	GetByCategory(category string) ([]entities.Pengacara, error)
+}
+
 type Pengacara struct {
 	DB *gorm.DB
 }
@@ -42,13 +49,10 @@ func (p *Pengacara) GetByEmail(email string) (entities.Pengacara, error) {
 	return pengacara, nil
 }
 
-func (p *Pengacara) GetByCategory(category string) (entities.Pengacara, error) {
-	var pengacara entities.Pengacara
-	res := p.DB.Where("category = ?", category).First(&pengacara)
-	if res.Error != nil {
-		return pengacara, res.Error
-	}
-	return pengacara, nil
+func (p *Pengacara) GetByCategory(category string) ([]entities.Pengacara, error) {
+	var pengacaras []entities.Pengacara
+	res := p.DB.Where("category = ?", category).Find(&pengacaras)
+	return pengacaras, res.Error
 }
 
 func (p *Pengacara) Insert() {}
