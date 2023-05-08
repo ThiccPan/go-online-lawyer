@@ -11,9 +11,10 @@ import (
 type KonsultasiStorer interface {
 	GetAllKonsultasi() ([]entities.Konsultasi, error)
 	GetKonsultasiByUserId(userId uint) ([]entities.Konsultasi, error)
+	GetUserKonsultasi(userId uint, konsultasiId uint) (entities.Konsultasi, error)
 	CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
-	EditKonsultasi(id uint, data entities.Konsultasi) (entities.Konsultasi, error)
-	DeleteKonsultasi(id uint) (entities.Konsultasi, error)
+	EditKonsultasi(konsultasiId uint, userId uint, data entities.Konsultasi) (entities.Konsultasi, error)
+	DeleteKonsultasi(konsultasiId uint, userId uint) (entities.Konsultasi, error)
 }
 
 type konsultasiStorer struct {
@@ -59,9 +60,18 @@ func (k *konsultasiStorer) GetKonsultasiByUserId(userId uint) ([]entities.Konsul
 	return daftarKonsultasi, nil
 }
 
-func (k *konsultasiStorer) EditKonsultasi(id uint, data entities.Konsultasi) (entities.Konsultasi, error) {
+func (k *konsultasiStorer) GetUserKonsultasi(userId uint, konsultasiId uint) (entities.Konsultasi, error) {
+	var dataKonsultasi entities.Konsultasi
+	res := k.DB.Where("user_id = ?", userId).Where("id = ?", konsultasiId).First(&dataKonsultasi)
+	if res.Error != nil {
+		return entities.Konsultasi{}, res.Error
+	}
+	return dataKonsultasi, nil
+}
+
+func (k *konsultasiStorer) EditKonsultasi(konsultasiId uint, userId uint, data entities.Konsultasi) (entities.Konsultasi, error) {
 	var res entities.Konsultasi
-	err := k.DB.Where("id = ?", id).First(&res).Error
+	err := k.DB.Where("user_id = ?", userId).Where("id = ?", konsultasiId).First(&res).Error
 	if err != nil {
 		return entities.Konsultasi{}, err
 	}
@@ -73,9 +83,9 @@ func (k *konsultasiStorer) EditKonsultasi(id uint, data entities.Konsultasi) (en
 	return res, nil
 }
 
-func (k *konsultasiStorer) DeleteKonsultasi(id uint) (entities.Konsultasi, error) {
+func (k *konsultasiStorer) DeleteKonsultasi(konsultasiId uint, userId uint) (entities.Konsultasi, error) {
 	deletedData := entities.Konsultasi{}
-	err := k.DB.Clauses(clause.Returning{}).Where("id = ?", id).Delete(&deletedData).Error
+	err := k.DB.Clauses(clause.Returning{}).Where("user_id = ?", userId).Where("id = ?", konsultasiId).Delete(&deletedData).Error
 	if deletedData.ID == 0 {
 		err = exceptions.ErrKonsultasiNotFound
 	}

@@ -13,11 +13,7 @@ import (
 	"github.com/thiccpan/go-online-lawyer/usecases"
 )
 
-type Konsultasi interface {
-	GetAll() error
-	GetKonsultasiByUserId(c echo.Context) error
-	TestCreateKonsultasi(c echo.Context) error
-}
+type Konsultasi interface {}
 
 type konsultasi struct {
 	useCase usecases.Konsultasi
@@ -41,7 +37,7 @@ func (k *konsultasi) TestGetKonsultasiByUserId(c echo.Context) error {
 	})
 }
 
-func (k *konsultasi) GetKonsultasiByUserId(c echo.Context) error {
+func (k *konsultasi) GetAllKonsultasiByUserId(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	idPayload, ok := claims["id"].(float64) //if error again try convert to string first
@@ -52,6 +48,35 @@ func (k *konsultasi) GetKonsultasiByUserId(c echo.Context) error {
 	}
 
 	data, err := k.useCase.GetKonsultasiByUserId(uint(idPayload))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": err,
+		})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"data": data,
+	})
+}
+
+func (k *konsultasi) GetUserKonsultasi(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	idPayload, ok := claims["id"].(float64) //if error again try convert to string first
+	if !ok {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": exceptions.ErrInvalidCredentials,
+		})
+	}
+
+	payloadKonsultasiId, err := strconv.Atoi(c.Param("konsultasiId"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"error": err,
+		})
+	}
+
+	data, err := k.useCase.GetUserKonsultasi(uint(idPayload), uint(payloadKonsultasiId))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{
 			"err": err,
@@ -116,6 +141,15 @@ func (k *konsultasi) CreateKonsultasi(c echo.Context) error {
 }
 
 func (k *konsultasi) EditKonsultasi(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	idPayload, ok := claims["id"].(float64) //if error again try convert to string first
+	if !ok {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": exceptions.ErrInvalidCredentials,
+		})
+	}
+
 	payloadKonsultasiId, err := strconv.Atoi(c.Param("konsultasiId"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{
@@ -149,7 +183,7 @@ func (k *konsultasi) EditKonsultasi(c echo.Context) error {
 		})
 	}
 
-	data, err := k.useCase.EditKonsultasi(uint(payloadKonsultasiId), konsultasiData)
+	data, err := k.useCase.EditKonsultasi(uint(payloadKonsultasiId), uint(idPayload), konsultasiData)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{
 			"err": err.Error(),
@@ -162,12 +196,14 @@ func (k *konsultasi) EditKonsultasi(c echo.Context) error {
 }
 
 func (k *konsultasi) DeleteKonsultasi(c echo.Context) error {
-	// userId, err := strconv.Atoi(c.Param("id"))
-	// if err != nil {
-	// 	return c.JSON(http.StatusBadRequest, echo.Map{
-	// 		"err": err.Error(),
-	// 	})
-	// }
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	idPayload, ok := claims["id"].(float64) //if error again try convert to string first
+	if !ok {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": exceptions.ErrInvalidCredentials,
+		})
+	}
 
 	konsultasiId, err := strconv.Atoi(c.Param("konsultasiId"))
 	if err != nil {
@@ -176,7 +212,7 @@ func (k *konsultasi) DeleteKonsultasi(c echo.Context) error {
 		})
 	}
 
-	data, err := k.useCase.DeleteKonsultasi(uint(konsultasiId))
+	data, err := k.useCase.DeleteKonsultasi(uint(konsultasiId), uint(idPayload))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{
 			"err": err.Error(),
