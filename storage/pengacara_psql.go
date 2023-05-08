@@ -51,7 +51,8 @@ func (p *Pengacara) GetByEmail(email string) (entities.Pengacara, error) {
 
 func (p *Pengacara) GetByCategory(category string) ([]entities.Pengacara, error) {
 	var pengacaras []entities.Pengacara
-	res := p.DB.Where("category = ?", category).Find(&pengacaras)
+	categoryString := "%" + category + "%"
+	res := p.DB.Where("category LIKE ?", categoryString).Find(&pengacaras)
 	return pengacaras, res.Error
 }
 
