@@ -8,7 +8,7 @@ import (
 )
 
 type AuthJWT interface {
-	GenerateToken(email string) (string, error)
+	GenerateToken(id uint, email string) (string, error)
 }
 
 type authJWT struct {
@@ -21,8 +21,9 @@ func NewAuthJWT() *authJWT {
 	}
 }
 
-func (aj *authJWT) GenerateToken(email string) (string, error) {
-	claims := &jwtCustomClaims{
+func (aj *authJWT) GenerateToken(id uint, email string) (string, error) {
+	claims := &JwtCustomClaims{
+		id,
 		email,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
@@ -36,7 +37,8 @@ func (aj *authJWT) GenerateToken(email string) (string, error) {
 	return token.SignedString([]byte(constants.JWT_SECRET))
 }
 
-type jwtCustomClaims struct {
+type JwtCustomClaims struct {
+	Id    uint   `json:"id"`
 	Email string `json:"email"`
 	jwt.RegisteredClaims
 }
