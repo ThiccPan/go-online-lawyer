@@ -34,12 +34,12 @@ func TestRegister(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 			mockUserStorer := storage.NewMockUserStorer()
-			mockUserStorer.On("GetByEmail", mock.Anything).Return(entities.User{}, nil)
+			mockUserStorer.On("GetByEmail", mock.Anything).Return(entities.User{}, tC.expectedErr)
 			mockUserStorer.On("Add", mock.Anything).Return(entities.User{
-				Username: "tes",
-				Email: "test@email.com",
-				Password: "123",
-			}, nil)
+				Username: tC.expectedData.Username,
+				Email: tC.expectedData.Email,
+				Password: tC.expectedData.Password,
+			}, tC.expectedErr)
 
 			userUseCase := NewUserUsecase(mockUserStorer)
 			data, err := userUseCase.Register(tC.userPayload)
@@ -73,10 +73,10 @@ func TestLogin(t *testing.T) {
 		t.Run(tC.desc, func(t *testing.T) {
 			mockUserStorer := storage.NewMockUserStorer()
 			mockUserStorer.On("GetByEmail", mock.AnythingOfType("string")).Return(entities.User{
-				Username: "test",
-				Email: "test@email.com",
-				Password: "123",
-			}, nil)
+				Username: tC.expectedData.Username,
+				Email: tC.expectedData.Email,
+				Password: tC.expectedData.Password,
+			}, tC.expectedErr)
 			userUsecase := NewUserUsecase(mockUserStorer)
 			data, err := userUsecase.Login(tC.userPayload)
 			assert.Equal(t, tC.expectedErr, err)
