@@ -8,6 +8,8 @@ import (
 type RatingPengacara interface {
 	CreateRating(userId uint, ratingData entities.RatingPengacara) (entities.RatingPengacara, error)
 	GetAllRatingByUser(userId uint) ([]entities.RatingPengacara, error)
+	GetAllRatingByPengacara(pengacaraId uint) ([]entities.RatingPengacara, error)
+	DeleteRating(idPayload uint, ratingId uint) (entities.RatingPengacara, error)
 }
 
 type ratingPengacara struct {
@@ -27,4 +29,12 @@ func (rp *ratingPengacara) CreateRating(userId uint, ratingData entities.RatingP
 
 func (rp *ratingPengacara) GetAllRatingByUser(userId uint) ([]entities.RatingPengacara, error) {
 	return rp.Storer.GetAllRatingByUser(userId)
+}
+
+func (rp *ratingPengacara) GetAllRatingByPengacara(pengacaraId uint) ([]entities.RatingPengacara, error) {
+	return rp.Storer.GetAllRatingByPengacara(pengacaraId)
+}
+
+func (rp *ratingPengacara) DeleteRating(idPayload uint, ratingId uint) (entities.RatingPengacara, error) {
+	return rp.Storer.DeleteRating(idPayload, ratingId)
 }

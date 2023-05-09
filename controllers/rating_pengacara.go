@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -81,5 +82,50 @@ func (rp *ratingPengacara) GetAllRatingByUser(c echo.Context) error {
 }
 
 func (rp *ratingPengacara) GetAllRatingByPengacara(c echo.Context) error {
-	return nil
+	pengacaraId, err := strconv.Atoi(c.Param("pengacaraId"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"err": err.Error(),
+		}) 
+	}
+
+	data, err := rp.usecase.GetAllRatingByPengacara(uint(pengacaraId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"err": exceptions.ErrInvalidCredentials,
+		})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"data": data,
+	})
+}
+
+func (rp *ratingPengacara) DeleteRating(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	idPayload, ok := claims["id"].(float64) //if error again try convert to string first
+	if !ok {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": exceptions.ErrInvalidCredentials,
+		})
+	}
+
+	ratingId, err := strconv.Atoi(c.Param("ratingId"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": err.Error(),
+		})
+	}
+
+	data, err := rp.usecase.DeleteRating(uint(idPayload), uint(ratingId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"err": exceptions.ErrInvalidCredentials,
+		})	
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"data": data,
+	})	
 }
