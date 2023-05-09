@@ -91,6 +91,8 @@ func main() {
 	userJWT.GET("/konsultasi/:konsultasiId", konsultasiController.GetUserKonsultasi)
 	userJWT.PUT("/konsultasi/:konsultasiId", konsultasiController.EditUserKonsultasi)
 	userJWT.DELETE("/konsultasi/:konsultasiId", konsultasiController.DeleteUserKonsultasi)
+	// edit konsultasi status and/or link
+	e.PUT("/konsultasi/:konsultasiId", konsultasiController.EditPengacaraKonsultasi)
 	// rating route
 	e.GET("/pengacaras/rating/:pengacaraId", ratingPengacaraController.GetAllRatingByPengacara)
 	userJWT.GET("/rating", ratingPengacaraController.GetAllRatingByUser)

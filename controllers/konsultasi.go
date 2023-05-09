@@ -212,6 +212,11 @@ func (k *konsultasi) DeleteUserKonsultasi(c echo.Context) error {
 	})
 }
 
+func (k *konsultasi) EditPengacaraKonsultasi(c echo.Context) error {
+	
+	return nil
+}
+
 func (k *konsultasi) TestGetKonsultasiByUserId(c echo.Context) error {
 	data, err := k.useCase.GetAllUserKonsultasi(1)
 	if err != nil {
