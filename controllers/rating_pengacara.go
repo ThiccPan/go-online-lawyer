@@ -57,3 +57,7 @@ func (rp *ratingPengacara) CreateRating(c echo.Context) error {
 		"idpayload": idPayload,
 	})
 }
+
+func (rp *ratingPengacara) GetAllRatingByUser(c echo.Context) error {
+	return nil
+}
