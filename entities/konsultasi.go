@@ -29,6 +29,7 @@ type EditKonsultasiDTO struct {
 }
 
 type PengacaraEditKonsultasiDTO struct {
+	PengacaraId uint `json:"pengacaraId" validate:"required"`
 	Status constants.KonsultasiStatus `json:"status" gorm:"konsultasiStatus"`
 	KonsultasiTime string `json:"konsultasiTime" validate:"required"`
 	Link string `json:"link" gorm:"type:text"`

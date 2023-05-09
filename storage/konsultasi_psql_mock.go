@@ -38,6 +38,10 @@ func (mk *mockKonsultasiStorer) EditKonsultasi(konsultasiId uint, userId uint, d
 	return ret.Get(0).(entities.Konsultasi), ret.Error(1)
 }
 
+func (k *mockKonsultasiStorer) EditKonsultasiPengacara(konsultasiId uint, konsultasiData entities.Konsultasi) (entities.Konsultasi, error) {
+	return entities.Konsultasi{}, nil
+}
+
 func (mk *mockKonsultasiStorer) DeleteKonsultasi(konsultasiId uint, userId uint) (entities.Konsultasi, error) {
 	ret := mk.Called(konsultasiId, userId)
 	return ret.Get(0).(entities.Konsultasi), ret.Error(1)

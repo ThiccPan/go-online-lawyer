@@ -14,6 +14,7 @@ type KonsultasiStorer interface {
 	GetUserKonsultasi(userId uint, konsultasiId uint) (entities.Konsultasi, error)
 	CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
 	EditKonsultasi(konsultasiId uint, userId uint, data entities.Konsultasi) (entities.Konsultasi, error)
+	EditKonsultasiPengacara(konsultasiId uint, konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
 	DeleteKonsultasi(konsultasiId uint, userId uint) (entities.Konsultasi, error)
 }
 
@@ -80,6 +81,25 @@ func (k *konsultasiStorer) EditKonsultasi(konsultasiId uint, userId uint, data e
 	if err != nil {
 		return entities.Konsultasi{}, err
 	}
+	return res, nil
+}
+func (k *konsultasiStorer) EditKonsultasiPengacara(konsultasiId uint, konsultasiData entities.Konsultasi) (entities.Konsultasi, error) {
+	var res entities.Konsultasi
+	err := k.DB.Where("pengacara_id = ?", konsultasiData.PengacaraId).Where("id = ?", konsultasiId).First(&res).Error
+	if err != nil {
+		return entities.Konsultasi{}, err
+	}
+
+	res.Status = konsultasiData.Status
+	res.Link = konsultasiData.Link
+	if !konsultasiData.KonsultasiTime.IsZero() {
+		res.KonsultasiTime = konsultasiData.KonsultasiTime
+	}
+	err = k.DB.Save(&res).Error
+	if err != nil {
+		return entities.Konsultasi{}, err
+	}
+
 	return res, nil
 }
 
