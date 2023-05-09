@@ -60,6 +60,10 @@ func main() {
 	konsultasiStorage := storage.NewKonsultasiStorer(DB)
 	konsultasiUsecase := usecases.NewKonsultasiUsecase(konsultasiStorage)
 	konsultasiController := controllers.NewKonsultasiController(konsultasiUsecase)
+	// ratingPengacara
+	ratingPengacaraStorage := storage.NewRatingPengacaraStorer(DB)
+	ratingPengacaraUsecase := usecases.NewRatingPengacaraUsecase(ratingPengacaraStorage)
+	ratingPengacaraController := controllers.NewRatingPengacaraController(ratingPengacaraUsecase)
 
 	// Middleware
 	e.Use(middleware.Logger())
@@ -87,6 +91,8 @@ func main() {
 	userJWT.GET("/konsultasi/:konsultasiId", konsultasiController.GetUserKonsultasi)
 	userJWT.PUT("/konsultasi/:konsultasiId", konsultasiController.EditUserKonsultasi)
 	userJWT.DELETE("/konsultasi/:konsultasiId", konsultasiController.DeleteUserKonsultasi)
+	// rating route
+	userJWT.POST("/rating/:pengacaraId", ratingPengacaraController.CreateRating)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))

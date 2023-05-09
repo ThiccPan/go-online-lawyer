@@ -32,6 +32,7 @@ func (config *ConfigDB) InitDB() *gorm.DB {
 		&entities.Pengacara{},
 		&entities.User{},
 		&entities.Konsultasi{},
+		&entities.RatingPengacara{},
 	)
 	
 	return db
