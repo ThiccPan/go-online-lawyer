@@ -10,6 +10,7 @@ type User struct {
 	Email string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`
 	KonsultasiList []Konsultasi
+	RatingPengacaraList []RatingPengacara
 }
 
 type UserDTO struct {

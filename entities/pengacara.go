@@ -13,6 +13,7 @@ type Pengacara struct {
 	Category string `json:"category"`
 	Price decimal.Decimal `json:"price" gorm:"type:decimal(20,2);"`
 	KonsultasiList []Konsultasi
+	RatingPengacaraList []RatingPengacara
 }
 
 type PengacaraDTO struct {
