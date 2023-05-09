@@ -93,7 +93,9 @@ func main() {
 	userJWT.DELETE("/konsultasi/:konsultasiId", konsultasiController.DeleteUserKonsultasi)
 	// rating route
 	userJWT.GET("/rating", ratingPengacaraController.GetAllRatingByUser)
+	userJWT.GET("/rating/:pengacaraId", ratingPengacaraController.GetAllRatingByPengacara)
 	userJWT.POST("/rating", ratingPengacaraController.CreateRating)
+
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))

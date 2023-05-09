@@ -7,6 +7,7 @@ import (
 
 type RatingPengacaraStorer interface {
 	CreateRating(ratingData entities.RatingPengacara) (entities.RatingPengacara, error)
+	GetAllRatingByUser(userId uint) ([]entities.RatingPengacara, error)
 }
 
 type ratingPengacaraStorer struct {
@@ -27,3 +28,11 @@ func (rps *ratingPengacaraStorer) CreateRating(ratingData entities.RatingPengaca
 	return ratingData, nil
 }
 
+func (rps *ratingPengacaraStorer) GetAllRatingByUser(userId uint) ([]entities.RatingPengacara, error) {
+	daftarRating := []entities.RatingPengacara{}
+	err := rps.DB.Where("user_id = ?", userId).Find(&daftarRating).Error
+	if err != nil {
+		return []entities.RatingPengacara{}, nil
+	}
+	return daftarRating, nil
+}

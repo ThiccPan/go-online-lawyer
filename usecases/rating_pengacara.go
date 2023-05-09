@@ -7,6 +7,7 @@ import (
 
 type RatingPengacara interface {
 	CreateRating(userId uint, ratingData entities.RatingPengacara) (entities.RatingPengacara, error)
+	GetAllRatingByUser(userId uint) ([]entities.RatingPengacara, error)
 }
 
 type ratingPengacara struct {
@@ -22,4 +23,8 @@ func NewRatingPengacaraUsecase(storer storage.RatingPengacaraStorer) *ratingPeng
 func (rp *ratingPengacara) CreateRating(userId uint, ratingData entities.RatingPengacara) (entities.RatingPengacara, error) {
 	ratingData.UserId = userId
 	return rp.Storer.CreateRating(ratingData)
+}
+
+func (rp *ratingPengacara) GetAllRatingByUser(userId uint) ([]entities.RatingPengacara, error) {
+	return rp.Storer.GetAllRatingByUser(userId)
 }

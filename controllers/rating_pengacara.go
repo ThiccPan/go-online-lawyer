@@ -59,5 +59,27 @@ func (rp *ratingPengacara) CreateRating(c echo.Context) error {
 }
 
 func (rp *ratingPengacara) GetAllRatingByUser(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	idPayload, ok := claims["id"].(float64) //if error again try convert to string first
+	if !ok {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"err": exceptions.ErrInvalidCredentials,
+		}) 
+	}
+	
+	data, err := rp.usecase.GetAllRatingByUser(uint(idPayload))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"err": exceptions.ErrInvalidCredentials,
+		}) 
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"data": data,
+	})
+}
+
+func (rp *ratingPengacara) GetAllRatingByPengacara(c echo.Context) error {
 	return nil
 }
