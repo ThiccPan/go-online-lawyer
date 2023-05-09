@@ -212,6 +212,49 @@ func (k *konsultasi) DeleteUserKonsultasi(c echo.Context) error {
 	})
 }
 
+func (k *konsultasi) EditPengacaraKonsultasi(c echo.Context) error {
+	payloadIdKonsultasi, err := strconv.Atoi(c.Param("konsultasiId"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"err": err.Error(),
+		})
+	}
+
+	payload := entities.PengacaraEditKonsultasiDTO{}
+	err = c.Bind(&payload)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"err": err.Error(),
+		})
+	}
+
+	timeFormatted, err := time.Parse(time.RFC3339, payload.KonsultasiTime)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"err": exceptions.ErrInvalidTimeFormat,
+		})
+	}
+
+	// what need to change is status, konsultasi time, and link
+	editData := entities.Konsultasi{
+		PengacaraId: payload.PengacaraId,
+		Status: payload.Status,
+		KonsultasiTime: timeFormatted,
+		Link: payload.Link,
+	}
+
+	data, err := k.useCase.EditKonsultasiPengacara(uint(payloadIdKonsultasi), editData)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"err": err,
+		})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"data": data,
+	})
+}
+
 func (k *konsultasi) TestGetKonsultasiByUserId(c echo.Context) error {
 	data, err := k.useCase.GetAllUserKonsultasi(1)
 	if err != nil {

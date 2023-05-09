@@ -13,6 +13,7 @@ type Konsultasi interface {
 	GetUserKonsultasi(userId uint, konsultasiId uint) (entities.Konsultasi, error)
 	CreateKonsultasi(konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
 	EditKonsultasi(konsultasiId uint, userId uint, konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
+	EditKonsultasiPengacara(konsultasiId uint, konsultasiData entities.Konsultasi) (entities.Konsultasi, error)
 	DeleteKonsultasi(konsultasiId uint, userId uint) (entities.Konsultasi, error)
 }
 
@@ -49,6 +50,10 @@ func (k *konsultasi) EditKonsultasi(konsultasiId uint, userId uint, konsultasiDa
 	}
 	fmt.Println(data)
 	return k.KonsultasiStorer.EditKonsultasi(konsultasiId, userId, data)
+}
+
+func (k *konsultasi) EditKonsultasiPengacara(konsultasiId uint, konsultasiData entities.Konsultasi) (entities.Konsultasi, error) {
+	return k.KonsultasiStorer.EditKonsultasiPengacara(konsultasiId, konsultasiData)
 }
 
 func (k *konsultasi) DeleteKonsultasi(konsultasiId uint, userId uint,) (entities.Konsultasi, error) {
