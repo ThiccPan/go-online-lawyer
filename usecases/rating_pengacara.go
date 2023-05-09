@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"github.com/thiccpan/go-online-lawyer/entities"
+	"github.com/thiccpan/go-online-lawyer/exceptions"
 	"github.com/thiccpan/go-online-lawyer/storage"
 )
 
@@ -36,5 +37,9 @@ func (rp *ratingPengacara) GetAllRatingByPengacara(pengacaraId uint) ([]entities
 }
 
 func (rp *ratingPengacara) DeleteRating(idPayload uint, ratingId uint) (entities.RatingPengacara, error) {
-	return rp.Storer.DeleteRating(idPayload, ratingId)
+	data, err := rp.Storer.DeleteRating(idPayload, ratingId)
+	if data.ID == 0 {
+		return entities.RatingPengacara{}, exceptions.ErrRatingNotFound
+	}
+	return data, err
 }
