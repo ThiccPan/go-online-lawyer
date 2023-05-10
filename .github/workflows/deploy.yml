@@ -26,18 +26,18 @@ jobs:
           push: true
           tags: ivanhd/go-online-lawyer-app:alpine
 
-  # build:
-  #   name: Build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: pull-test-deploy
-  #     uses: appleboy/ssh-action@master
-  #     with:
-  #       host: ${{ secrets.HOST }}
-  #       username: ${{ secrets.USERNAME }}
-  #       key: ${{ secrets.KEY }}
-  #       port: ${{ secrets.PORT }}
-  #       script: |
-  #         cd app/go-online-lawyer
-  #         git pull origin master
-  #         docker-compose down && docker-compose up --build -d
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: pull-test-deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd app/go-online-lawyer
+          git pull origin master
+          docker-compose down && docker compose -f docker-compose.prod.yml up --build
