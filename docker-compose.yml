@@ -6,9 +6,11 @@ services:
     build: .
     env_file:
       - .env
+    networks:
+      - gol_bridge
     ports:
       - 8080:8080
-    volumes: 
+    volumes:
       - ./:/usr/src/app
     restart: always
   db:
@@ -19,6 +21,8 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_PORT=${DB_PORT}
       - POSTGRES_HOST=${DB_HOST}
+    networks:
+      - gol_bridge
     ports:
       - 5432:5432
     volumes:
@@ -26,3 +30,7 @@ services:
 
 volumes:
   postgres-db:
+
+networks:
+  gol_bridge:
+    driver: bridge
