@@ -6,18 +6,38 @@ on:
       - master
 
 jobs:
-  build:
-    name: Build
+
+  push-to-docker-hub:
     runs-on: ubuntu-latest
     steps:
-    - name: pull-test-deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
-        script: |
-          cd app/go-online-lawyer
-          git pull origin master
-          docker-compose down && docker-compose up --build -d
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ivanhd/go-online-lawyer-app:alpine
+
+  # build:
+  #   name: Build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: pull-test-deploy
+  #     uses: appleboy/ssh-action@master
+  #     with:
+  #       host: ${{ secrets.HOST }}
+  #       username: ${{ secrets.USERNAME }}
+  #       key: ${{ secrets.KEY }}
+  #       port: ${{ secrets.PORT }}
+  #       script: |
+  #         cd app/go-online-lawyer
+  #         git pull origin master
+  #         docker-compose down && docker-compose up --build -d

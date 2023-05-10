@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -28,12 +29,13 @@ func main() {
 	// 	DB_Name:     "go_online_lawyer",
 	// }
 
+	godotenv.Load(".env")
 	DBconfDefault := gormPsqlConf.ConfigDB{
-		DB_Username: os.Getenv("DB_USER"),
+		DB_Username: os.Getenv("DB_USERNAME"),
 		DB_Password: os.Getenv("DB_PASSWORD"),
-		DB_Port:     "5432",
-		DB_Host:     "db",
-		DB_Name:     "go_online_lawyer",
+		DB_Port:     os.Getenv("DB_PORT"),
+		DB_Host:     os.Getenv("DB_HOST"),
+		DB_Name:     os.Getenv("DB_NAME"),
 	}
 
 	// services
