@@ -27,6 +27,7 @@ jobs:
           tags: ivanhd/go-online-lawyer-app:alpine
 
   build:
+    needs: push-to-docker-hub
     name: Build
     runs-on: ubuntu-latest
     steps:
