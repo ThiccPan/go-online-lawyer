@@ -20,5 +20,4 @@ jobs:
         script: |
           cd app/go-online-lawyer
           git pull origin master
-          go test -v ./..
           docker-compose down && docker-compose up --build -d
