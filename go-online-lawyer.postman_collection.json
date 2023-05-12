@@ -1,0 +1,461 @@
+{
+	"info": {
+		"_postman_id": "dd47b38c-34c8-4a76-a7c4-553d76f37a3f",
+		"name": "go-online-lawyer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23637484"
+	},
+	"item": [
+		{
+			"name": "get all lawyer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/pengacaras",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"pengacaras"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get lawyer by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/pengacaras/1",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"pengacaras",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get lawyer by category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/pengacaras/category/korporasi",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"pengacaras",
+						"category",
+						"korporasi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"user1\",\n    \"email\": \"user1@email.com\",\n    \"password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/register",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('set token', () => {",
+							"    const responseJson = pm.response.json();",
+							"    const { token } = responseJson;",
+							"",
+							"    pm.expect(token).to.not.equals('');",
+							"",
+							"    pm.environment.set('tokenGOL', token);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"user1\",\n    \"email\": \"user1@email.com\",\n    \"password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/login",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all user konsultasi",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenGOL}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/user/konsultasi",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"user",
+						"konsultasi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create konsultasi",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenGOL}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"pengacaraId\": 1,\n    \"konsultasiTime\": \"2023-05-06T04:23:56.123456Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/user/konsultasi",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"user",
+						"konsultasi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user konsultasi",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenGOL}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/user/konsultasi/2",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"user",
+						"konsultasi",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit konsultasi time",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenGOL}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"konsultasiTime\": \"2024-05-07T04:23:56.123456Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/user/konsultasi/2",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"user",
+						"konsultasi",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete konsultasi",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenGOL}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/user/konsultasi/2",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"user",
+						"konsultasi",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create rating",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenGOL}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": 2,\n    \"pengacaraId\": 2,\n    \"rating\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/user/rating",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"user",
+						"rating"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all user written rating",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenGOL}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/user/rating",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"user",
+						"rating"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all pengacara rating",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenGOL}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/pengacaras/rating/2",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"pengacaras",
+						"rating",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete rating",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenGOL}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/user/rating/1",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"user",
+						"rating",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit konsultasi by pengacara",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"pengacaraId\": 2,\n    \"konsultasiTime\": \"2025-05-07T04:23:56.123456Z\",\n    \"status\": \"SELESAI\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{hostGOL}}:{{portGOL}}/konsultasi/1",
+					"host": [
+						"{{hostGOL}}"
+					],
+					"port": "{{portGOL}}",
+					"path": [
+						"konsultasi",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "hostGOL",
+			"value": "http://18.207.214.224",
+			"type": "string"
+		},
+		{
+			"key": "portGOL",
+			"value": "8080",
+			"type": "string"
+		},
+		{
+			"key": "tokenGOL",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
