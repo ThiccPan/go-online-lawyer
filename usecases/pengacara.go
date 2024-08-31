@@ -10,6 +10,7 @@ type Pengacara interface {
 	GetById(id int) (entities.Pengacara, error)
 	GetByEmail(email string) (entities.Pengacara, error)
 	GetByCategory(category string) ([]entities.Pengacara, error)
+	Add(newData entities.Pengacara) (entities.Pengacara, error)
 }
 
 type pengacara struct {
@@ -36,4 +37,8 @@ func (p *pengacara) GetByEmail(email string) (entities.Pengacara, error) {
 
 func (p *pengacara) GetByCategory(category string) ([]entities.Pengacara, error) {
 	return p.PengacaraStorer.GetByCategory(category)
+}
+
+func (p *pengacara) Add(newData entities.Pengacara) (entities.Pengacara, error) {
+	return p.PengacaraStorer.Insert(newData)
 }

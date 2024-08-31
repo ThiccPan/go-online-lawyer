@@ -21,14 +21,6 @@ import (
 func main() {
 	e := echo.New()
 
-	// DBconfDefault := gormPsqlConf.ConfigDB{
-	// 	DB_Username: "thiccpan",
-	// 	DB_Password: "dbpsqlpass432",
-	// 	DB_Port:     "5432",
-	// 	DB_Host:     "localhost",
-	// 	DB_Name:     "go_online_lawyer",
-	// }
-
 	godotenv.Load(".env")
 	DBconfDefault := gormPsqlConf.ConfigDB{
 		DB_Username: os.Getenv("DB_USERNAME"),
@@ -41,13 +33,6 @@ func main() {
 	// services
 	DB := DBconfDefault.InitDB()
 	tokenManager := helper.NewAuthJWT()
-
-	// jwtConfig := echojwt.Config{
-	// 	NewClaimsFunc: func(c echo.Context) jwt.Claims {
-	// 		return new(helper.JwtCustomClaims)
-	// 	},
-	// 	SigningKey: constants.JWT_SECRET,
-	// }
 
 	// storage, usecase, and controller setup
 	// pengacara
@@ -84,6 +69,7 @@ func main() {
 	e.GET("/pengacaras/:id", pengacaraController.GetById)
 	e.GET("/pengacaras/filter", pengacaraController.GetWithFilter)
 	e.GET("/pengacaras/category/:category", pengacaraController.GetByCategory)
+	e.POST("/pengacaras", pengacaraController.Add)
 	// user route
 	e.POST("/register", userController.UserRegister)
 	e.POST("/login", userController.UserLogin)
